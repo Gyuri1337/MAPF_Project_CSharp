@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <Version>3.4.5</Version>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/deiruch/SATInterface</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/deiruch/SATInterface</RepositoryUrl>
+    <PlatformTarget>x64</PlatformTarget>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSource>true</IncludeSource>
+    <PackageId>deiruch.SATInterface</PackageId>
+    <Authors>Simon Felix</Authors>
+    <Description>Library to formulate and solve SAT problems in .NET. Includes CaDiCaL, Kissat and CryptoMiniSat as solvers.</Description>
+    <Copyright>Copyright 2021 Simon Felix</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Pack="true" PackageCopyToOutput="true" Include="cryptominisat5win.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Pack="true" PackageCopyToOutput="true" Include="CaDiCaL.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Pack="true" PackageCopyToOutput="true" Include="Kissat.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ErrorProne.NET.CoreAnalyzers" Version="0.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ErrorProne.NET.Structs" Version="0.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
