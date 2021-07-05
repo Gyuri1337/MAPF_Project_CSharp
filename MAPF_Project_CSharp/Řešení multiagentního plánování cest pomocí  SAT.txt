@@ -1,0 +1,5 @@
+Řešení multiagentního plánování cest pomocí SAT
+
+Cílem práce je navrhnout a vytvořit model, který vyřeší problém multiagentního plánování cest (MAPF) převodem na problém splnitelnosti (SAT). 
+Pokud požadujeme optimální řešení, iterujeme volání SAT-solveru s upravenými podmínkami na délku řešení.
+

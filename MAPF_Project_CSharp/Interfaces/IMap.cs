@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace MAPF_Project_CSharp
@@ -15,7 +16,7 @@ namespace MAPF_Project_CSharp
         /// Add n more agent to the map
         /// </summary>
         /// <returns>true if there are more agents</returns>
-        public bool AddAgent(int nAgent = 0);
+        public bool AddAgent(int nAgent = 1);
         
         /// <summary>
         /// Getter for agent count
@@ -42,6 +43,9 @@ namespace MAPF_Project_CSharp
         /// </summary>
         public string MapName { get; }
 
-       
+        /// <summary>
+        /// Getter for all the agents not only already added to map
+        /// </summary>
+        public Tuple<uint, uint>[] AllAgents { get; }
     }
 }

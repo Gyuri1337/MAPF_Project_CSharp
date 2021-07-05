@@ -9,7 +9,8 @@ namespace MAPF_Project_CSharp
     class Map : IMap
     {
         //Constructors
-        Map(uint vertices, Tuple<uint, uint>[] agentList, uint[][] adjList, string mapName)
+        // private Map(){} //No default constructor
+        public Map(uint vertices, Tuple<uint, uint>[] agentList, uint[][] adjList, string mapName)
         {
             this.VertexCount = vertices;
             this.AdjList = adjList;
@@ -21,7 +22,7 @@ namespace MAPF_Project_CSharp
 
         //Private variables
         private int _position;
-        
+        private Tuple<uint, uint>[] agents;
 
         //Properties
         public uint[][] AdjList { get; }
@@ -30,8 +31,14 @@ namespace MAPF_Project_CSharp
 
         public Tuple<uint, uint>[] Agents
         {
-            get => Agents.Take(_position).ToArray();
-            private set => Agents = value;
+            get => agents.Take(_position).ToArray();
+            private set => this.agents = value;
+        }
+
+        public Tuple<uint, uint>[] AllAgents
+        {
+            get => agents;
+            private set => this.agents = value;
         }
 
         public string MapName { get; }
@@ -52,9 +59,9 @@ namespace MAPF_Project_CSharp
                 throw new IndexOutOfRangeException();
             }
 
-            if (Agents.Length > _position)
+            if (agents.Length > _position)
             {
-                var tmp = Math.Min(nAgent, Agents.Length - _position);
+                var tmp = Math.Min(nAgent, agents.Length - _position);
                 _position += tmp;
                 return true;
             }
