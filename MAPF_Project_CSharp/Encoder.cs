@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using MAPF;
 using uintmap = System.UInt32;
@@ -34,7 +35,7 @@ namespace MAPF_Project_CSharp
         private ulong[] _newVariables;
         private ulong[] _oldVariables;
 
-
+        
         //Public methods
 
         public void Reset()
@@ -122,6 +123,7 @@ namespace MAPF_Project_CSharp
             {
                 _SAT.AddClause(_ToLiteral(_oldVariables[i] + 1, PozitiveLiteral));
             }
+
         }
 
         /// <summary>
@@ -246,6 +248,7 @@ namespace MAPF_Project_CSharp
             clauses.Clear();
         }
        
+
         /// <summary>
         /// 
         /// </summary>
@@ -261,25 +264,31 @@ namespace MAPF_Project_CSharp
             }
         }
 
+
         /// <summary>
         /// returns the path for all agents 
         /// </summary>
         /// <param name="TEG">TEG</param>
         /// <param name="map">map</param>
         /// <param name="model">sat model</param>
-        public void Write(IEnumerable<uintmap[][]> TEG, IMap map, bool[] model)
+        public uintmap[][] AgentsPath(IEnumerable<uintmap[][]> TEG, IMap map, bool[] model)
         {
+            _actualVariable = 0;
             var agents = map.Agents;
             adjList = map.AdjList;
 
             uintmap[][] oldVertices;
             var oldVerticesList = new List<uintmap[]>();
 
-            _SAT.AddVariable(agents.Length + 1);
-            _SAT.AddClause(_ToLiteral(0, PozitiveLiteral));
-
             _oldVariables = new ulong[agents.Length];
             _oldMap = new uint[agents.Length][];
+            
+            List<List<uintmap>> agentsPath = new List<List<uint>>();
+
+            foreach (var _ in agents)
+            {
+                agentsPath.Add(new List<uint>());
+            }
 
             int index = 0;
             foreach (var (start, _) in agents)
@@ -288,7 +297,7 @@ namespace MAPF_Project_CSharp
                 _oldVariables[index] = (ulong)index;
                 _oldMap[index] = new uintmap[map.VertexCount];
                 _oldMap[index][start] = 1;
-                _SAT.AddClause(_ToLiteral((uint)++index, PozitiveLiteral));
+                agentsPath[index++].Add(start);
             }
 
             oldVertices = oldVerticesList.ToArray();
@@ -300,30 +309,36 @@ namespace MAPF_Project_CSharp
 
             CreateNewMap(ref _newMap, agents.Length, map.VertexCount);
 
+            
             foreach (var newVertices in TEG) //For each time
             {
                 ++actualTime;
                 _newVariables = new ulong[agents.Length];
                 for (int agent = 0; agent < agents.Length; agent++) //For each agent
                 {
+                    _newVariables[agent] = _actualVariable;
+                    _actualVariable += (ulong)newVertices[agent].Length;
+
 
                     //Update new layer
                     uintmap i = 0;
                     foreach (var vertex in newVertices[agent]) //New map update
                     {
-                        _newMap[agent][vertex] = ++i;
+                        ++i;
+                        if (model[_newVariables[agent] + i])
+                        {
+                            if (adjList[agentsPath[agent][agentsPath[agent].Count - 1]].Contains(vertex)
+                                || agentsPath[agent][agentsPath[agent].Count - 1] == vertex)
+                            {
+                                agentsPath[agent].Add(vertex);
+                                break;
+                            }
+
+                        }
                     }
-
-                    _SAT.AddVariable(newVertices[agent].Length);
-                    _newVariables[agent] = _actualVariable;
-                    _actualVariable += (ulong)newVertices[agent].Length;
-
-                    CreateNextClauses(oldVertices[agent], newVertices[agent].Length, agent);
-
 
                 }
 
-                CreateSwapClauses(newVertices);
 
                 oldVertices = newVertices;
                 //Update old to new
@@ -332,10 +347,7 @@ namespace MAPF_Project_CSharp
                 CreateNewMap(ref _newMap, agents.Length, map.VertexCount);
             }
 
-            for (int i = 0; i < agents.Length; i++)
-            {
-                _SAT.AddClause(_ToLiteral(_oldVariables[i] + 1, PozitiveLiteral));
-            }
+            return agentsPath.Select(x => x.ToArray()).ToArray();
         }
     }
 }

@@ -31,19 +31,22 @@ namespace MAPF_Project_CSharp
             Console.WriteLine("Enter a file name of an instance you want to solve: ");
             Console.WriteLine("!The instance and map file must be placed in the directories of reader!");
             var instanceName = "random-8-8-20-random-1.scen"; //Console.ReadLine(); 
+            //var instanceName = "Berlin_1_3.scen";
             Console.WriteLine("Enter a timeout in seconds for the maximum solving time: ");
             var timeout = "10"; //Console.ReadLine();
-            var timoutInt = int.Parse(timeout);
+            var timoutInt = double.Parse(timeout);
 
             //Reading files
             if(!_reader.Open(instanceName))
             {
                 Console.WriteLine("File opening error");
+                return;
             }
 
             if (!_reader.ReadAgents() || !_reader.ReadMap())
             {
                 Console.WriteLine("File reading error");
+                return;
             }
 
             //Preprocessing
@@ -71,7 +74,7 @@ namespace MAPF_Project_CSharp
         /// <param name="timeout">maximum solving time for encoding and SAT solver</param>
         /// <param name="stream">Where to write the output</param>
         /// <returns>true if solvable</returns>
-        private bool SolveWithTimout(int timeout, TextWriter stream)
+        private bool SolveWithTimout(double timeout, TextWriter stream)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -79,9 +82,9 @@ namespace MAPF_Project_CSharp
             var timoutMiliSec = timeout * 1000;
             bool solved = false;
             int layer = 0;
-            while (!(solved = solver.Solve(timoutMiliSec - (int) sw.ElapsedMilliseconds)))
+            while (!(solved = solver.Solve(timoutMiliSec -  sw.ElapsedMilliseconds, true)))
             {
-                if (timoutMiliSec - (int) sw.ElapsedMilliseconds < 0)
+                if (timoutMiliSec -  sw.ElapsedMilliseconds < 0)
                 {
                     break;
                 }

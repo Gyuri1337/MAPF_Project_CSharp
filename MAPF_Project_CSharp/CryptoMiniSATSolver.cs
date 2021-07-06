@@ -41,7 +41,7 @@ namespace MAPF
                 /*/ //Debug Clauses
                 foreach (var VARIABLE in clause)
                 {
-                    Console.Write("\t{0}", VARIABLE);
+                    Console.AgentsPath("\t{0}", VARIABLE);
                 }
                 Console.WriteLine();
                 /**/

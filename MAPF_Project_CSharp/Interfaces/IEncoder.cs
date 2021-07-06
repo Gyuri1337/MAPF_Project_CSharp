@@ -15,8 +15,17 @@ namespace MAPF_Project_CSharp
         /// <summary>
         /// Encode the instance with TEG into SAT solver
         /// </summary>
-        /// <param name="TEG"></param>
-        /// <param name="map"></param>
+        /// <param name="TEG">Teg</param>
+        /// <param name="map">map</param>
         public void Encode(IEnumerable<uintmap[][]> TEG, IMap map);
+
+        /// <summary>
+        /// Return path for every agent
+        /// </summary>
+        /// <param name="TEG">TEG</param>
+        /// <param name="map">map</param>
+        /// <param name="model">SAT model</param>
+        /// <returns></returns>
+        public uintmap[][] AgentsPath(IEnumerable<uintmap[][]> TEG, IMap map, bool[] model);
     }
 }
