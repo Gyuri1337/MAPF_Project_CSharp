@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using MAPF;
 
@@ -29,10 +30,12 @@ namespace MAPF_Project_CSharp
             Console.WriteLine("SAT Solver - Cryptominisat");
             Console.WriteLine("Enter a file name of an instance you want to solve: ");
             Console.WriteLine("!The instance and map file must be placed in the directories of reader!");
-            var instanceName = Console.ReadLine(); 
+            var instanceName = "random-8-8-20-random-1.scen"; //Console.ReadLine(); 
             Console.WriteLine("Enter a timeout in seconds for the maximum solving time: ");
-            var timeout = Console.ReadLine();
+            var timeout = "10"; //Console.ReadLine();
             var timoutInt = int.Parse(timeout);
+
+            //Reading files
             if(!_reader.Open(instanceName))
             {
                 Console.WriteLine("File opening error");
@@ -43,11 +46,15 @@ namespace MAPF_Project_CSharp
                 Console.WriteLine("File reading error");
             }
 
-            _map = _reader.Map;
-            _TEG = new TimeExpGraphBothSide(_reader.Map); //Possible change for ITEG if there are more Time Expanded graph used but we will use only one
+            //Preprocessing
+            _map = _reader.Map;                             
+            _map.AddAgent(1);                               //Add first agent
+            _TEG = new TimeExpGraphBothSide(_reader.Map);   //Possible change for ITEG if there are more Time Expanded graph used but we will use only one
             _TEG.SetEnumerator();
 
-            while (SolveWithTimout(timoutInt)) //Current TEG solvable in time
+
+            //Solving
+            while (SolveWithTimout(timoutInt, Console.Out)) //Current TEG solvable in time
             {
                 if (!_map.AddAgent()) //Add agent for TEG (TEG class is using the same instance of IMap ..)
                 {
@@ -62,8 +69,9 @@ namespace MAPF_Project_CSharp
         /// Creates a new ISolver with GetSolver and try to solve the current TEG with timout
         /// </summary>
         /// <param name="timeout">maximum solving time for encoding and SAT solver</param>
+        /// <param name="stream">Where to write the output</param>
         /// <returns>true if solvable</returns>
-        private bool SolveWithTimout(int timeout)
+        private bool SolveWithTimout(int timeout, TextWriter stream)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -84,13 +92,13 @@ namespace MAPF_Project_CSharp
             if (solved)
             {
                 sw.Stop();
-                Console.WriteLine(" ......{0} agents with timespan {1}" , _map.Agents.Length ,layer);
+                stream.WriteLine("{0} agents with timespan {1} in {2} ms" , _map.Agents.Length ,layer, sw.ElapsedMilliseconds);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            
+            stream.WriteLine("Time out - {0} ms", timoutMiliSec);
+            return false;
+            
 
         }
 
@@ -98,8 +106,9 @@ namespace MAPF_Project_CSharp
         private ISolver<int> GetSolver()
         {
             Func<ISATSolver<int>> lambda = () => new CryptoMiniSATSolver();
+            Func<ISATSolver<int>, IEncoder<int> > lambdaEncoder = (ISATSolver<int> solver) => new Encoder<int>(solver);
             var teg = new TimeExpGraphBothSide(_TEG);
-            return new Solver<int>(lambda, new Encoder<int>(), teg);
+            return new Solver<int>(lambda, lambdaEncoder, teg, _map);
         }
     }
 }

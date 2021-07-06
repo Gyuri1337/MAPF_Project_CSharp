@@ -11,7 +11,7 @@ namespace MAPF_Project_CSharp
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns>true if solvable</returns>
-        public bool Solve(int timeout);
+        public bool Solve(double timeout);
         
         /// <summary>
         /// Add a time layer to TEG

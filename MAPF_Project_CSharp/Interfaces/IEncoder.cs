@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+using uintmap = System.UInt32;
 namespace MAPF_Project_CSharp
 {
     interface IEncoder<Lit>
@@ -11,6 +12,11 @@ namespace MAPF_Project_CSharp
         /// </summary>
         public void Reset();
 
-        public void Encode(TimeExpGraphBothSide TEG);
+        /// <summary>
+        /// Encode the instance with TEG into SAT solver
+        /// </summary>
+        /// <param name="TEG"></param>
+        /// <param name="map"></param>
+        public void Encode(IEnumerable<uintmap[][]> TEG, IMap map);
     }
 }

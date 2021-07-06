@@ -11,7 +11,11 @@ namespace MAPF
     {
         
         ///Getter for lambda which creates the literal, useful when more variables than range of int
-        public Func<uint, bool, Lit> GetToLiteral();
+        public Func<ulong, bool, Lit> GetToLiteral();
+
+        
+        //Getter for lambda for literal negation
+        public Func<Lit, Lit> GetNegation();
 
         ///Getter for model
         public bool[]? GetModel();
