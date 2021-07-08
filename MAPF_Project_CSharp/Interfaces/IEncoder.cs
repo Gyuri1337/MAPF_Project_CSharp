@@ -20,7 +20,7 @@ namespace MAPF_Project_CSharp
         public void Encode(IEnumerable<uintmap[][]> TEG, IMap map);
 
         /// <summary>
-        /// Return path for every agent
+        /// Return path for every agent in map
         /// </summary>
         /// <param name="TEG">TEG</param>
         /// <param name="map">map</param>

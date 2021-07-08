@@ -250,7 +250,7 @@ namespace MAPF_Project_CSharp
        
 
         /// <summary>
-        /// 
+        /// Create a new instance of jagged array and assign it to the pointer.
         /// </summary>
         /// <param name="map">creates a new jagged map for the pointer map - squared</param>
         /// <param name="a">size 1</param>
@@ -271,7 +271,7 @@ namespace MAPF_Project_CSharp
         /// <param name="TEG">TEG</param>
         /// <param name="map">map</param>
         /// <param name="model">sat model</param>
-        public uintmap[][] AgentsPath(IEnumerable<uintmap[][]> TEG, IMap map, bool[] model)
+        public uintmap[][] AgentsPath(IEnumerable<uintmap[][]> TEG, IMap map, bool[] model) // Same cycle as encoding but saving the path
         {
             _actualVariable = 0;
             var agents = map.Agents;

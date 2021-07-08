@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace MAPF_Project_CSharp
 {
     //Implementation for IMap
@@ -22,12 +23,23 @@ namespace MAPF_Project_CSharp
 
         //Private variables
         private int _position;
+        private long? _maxDistance;
         private Tuple<uint, uint>[] agents;
 
         //Properties
         public uint[][] AdjList { get; }
 
         public uint AgentCount => (uint) _position;
+
+        public long? MaxDistance
+        {
+            get => _maxDistance;
+            set
+            {
+                if (_maxDistance == null) _maxDistance = value;
+            }
+        } 
+
 
         public Tuple<uint, uint>[] Agents
         {

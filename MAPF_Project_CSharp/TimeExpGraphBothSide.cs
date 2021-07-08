@@ -9,6 +9,9 @@ using uintmap = System.UInt32;
 
 namespace MAPF_Project_CSharp
 {
+    /// <summary>
+    /// Represent TEG for a map with map.Agents agents
+    /// </summary>
     class TimeExpGraphBothSide : IEnumerable<uintmap[][]>
     {
         //Returns time expanded graph for each time i
@@ -128,6 +131,7 @@ namespace MAPF_Project_CSharp
         public void SetEnumerator()
         {
             BFS_Agents();
+            _map.MaxDistance = _maxDistance;
         }
 
         public void AddDistance()
@@ -147,6 +151,10 @@ namespace MAPF_Project_CSharp
         }
 
         //Private methods
+
+        /// <summary>
+        /// Calculate private variables of this class for each agent of map. (preporcessing before enumeration)
+        /// </summary>
         private void BFS_Agents()
         {
             var agents = _map.AllAgents;
@@ -170,6 +178,9 @@ namespace MAPF_Project_CSharp
             SetAvaibleVertices();
         }
 
+        /// <summary>
+        /// Set the avaible vertices according to the current max_distance, this is changed when Distance is added
+        /// </summary>
         private void SetAvaibleVertices()
         {
             int agent = 0;
@@ -190,6 +201,15 @@ namespace MAPF_Project_CSharp
             }
         }
 
+        /// <summary>
+        /// Do a BFS search from start vertex, update max distance according to end vertex,  return the data structure of _AddedFromStart or _AddedFromEnd according from which end we are calling, if add is true then list must be not null and push the end states of BFS search at the end of searching
+        /// </summary>
+        /// <param name="start">start vertex</param>
+        /// <param name="end">end vertex</param>
+        /// <param name="adjList">map</param>
+        /// <param name="list">list for adding</param>
+        /// <param name="add">if add to the list</param>
+        /// <returns></returns>
         private uintmap[][] BFS(uintmap start, uintmap end, uintmap[][] adjList, List<uintmap[]> list = null, bool add = false)
         {
             var addList = new List<uintmap[]>(); //List of our return value

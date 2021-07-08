@@ -47,5 +47,11 @@ namespace MAPF_Project_CSharp
         /// Getter for all the agents not only already added to map
         /// </summary>
         public Tuple<uint, uint>[] AllAgents { get; }
+
+        /// <summary>
+        /// Maximum of minimal distances between agents minimal paths
+        /// </summary>
+        /// <returns></returns>
+        public long? MaxDistance { get; set; }
     }
 }
